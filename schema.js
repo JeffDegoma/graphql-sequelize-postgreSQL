@@ -4,6 +4,7 @@ export default `
         id: Int!
         text: String!
         creatorId: Int!
+        creatorUsername: String!
     }
 
     type Board {
@@ -23,6 +24,7 @@ export default `
     type User {
         id: Int!
         username: String!
+        email: String!
         createdAt: String!
         updatedAt: String!
         boards: [Board!]!
@@ -35,6 +37,9 @@ export default `
         deleteUser(username: String!): Int!
         createBoard(owner: Int!, name: String): Board!
         createSuggestion(creatorId: Int!, text: String, boardId: Int!): Suggestion!
+        register(username: String!, email: String!, password: String!): User!
+        login(email: String!, password: String!): String!
+
     }
 
 `

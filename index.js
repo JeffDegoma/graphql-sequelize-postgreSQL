@@ -7,6 +7,8 @@ import typeDefs from './schema'
 import resolvers from './resolvers'
 import models from './models'
 
+const SECRET = 'thisisasecret';
+
 
 const schema = makeExecutableSchema({
     typeDefs,
@@ -14,12 +16,23 @@ const schema = makeExecutableSchema({
 })
 
 
+
+
 const PORT = 3000;
 const app = express();
 
+const addUser = async(req, res) => {
+    const token = req.headers['authentication'];
+    try {
+        jwt.verify(token, SECRET)
+    }catch(error){
+        console.log(error)
+    }
+}
 
 
-app.use('/graphql', bodyParser.json(), graphqlExpress({ schema, context: { models }}),);
+
+app.use('/graphql', bodyParser.json(), graphqlExpress({ schema, context: { models, SECRET }}),);
 
 
 app.use('/graphiql', graphiqlExpress({
