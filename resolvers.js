@@ -22,7 +22,7 @@ import _ from 'lodash'
     Board: {
          suggestions: ({ id }, args, {models}) =>
             models.Suggestion.findAll({
-                where: {
+                where: { 
                     boardId: id
                 }
             }) 
@@ -41,13 +41,15 @@ import _ from 'lodash'
 
     Query: {
         allUsers: (parent, args, { models }) => models.User.findAll(),
-        getUser: (parent, { username }, { models, user }) => {
-            console.log("USERRRRR", user)
-            models.User.findOne({ 
+        me: (parent, args, { models, user }) => {
+            if(user){   
+            return models.User.findOne({ 
                 where: {
-                    username,
+                    id: user.id
                 }
             })
+            }
+            return null;
         },
         userBoards: (parent, { owner }, { models }) => 
             models.Boards.findAll({

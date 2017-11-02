@@ -16,7 +16,7 @@ export default `
     
     type Query {
         allUsers: [User!]!
-        getUser(username: String!): User
+        me: User
         userBoards(owner: String!): Board
         userSuggestions(creatorId: String!): [Suggestion!]!
     } 

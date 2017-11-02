@@ -20,7 +20,7 @@ const schema = makeExecutableSchema({
 const PORT = 3000;
 const app = express();
 
-const addUser = async (req) => {
+const addUser = async (req ) => {
     const token = req.headers.authorization
     console.log('TOKENNNNN', token)
     try {
@@ -32,7 +32,7 @@ const addUser = async (req) => {
     req.next()
 }
 
-// app.use(addUser)
+app.use(addUser)
 
 
 app.use('/graphql', bodyParser.json(), graphqlExpress(req =>({ 
