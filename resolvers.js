@@ -41,12 +41,14 @@ import _ from 'lodash'
 
     Query: {
         allUsers: (parent, args, { models }) => models.User.findAll(),
-        getUser: (parent, { username }, { models }) => 
+        getUser: (parent, { username }, { models, user }) => {
+            console.log("USERRRRR", user)
             models.User.findOne({ 
                 where: {
                     username,
                 }
-        }),
+            })
+        },
         userBoards: (parent, { owner }, { models }) => 
             models.Boards.findAll({
                 where:{

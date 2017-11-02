@@ -32,7 +32,6 @@ export default `
     }
 
     type Mutation {
-        createUser(username: String!): User
         updateUser(username: String!, newUsername: String! ): [Int!]!
         deleteUser(username: String!): Int!
         createBoard(owner: Int!, name: String): Board!

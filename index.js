@@ -6,9 +6,9 @@ import { makeExecutableSchema } from 'graphql-tools'
 import typeDefs from './schema'
 import resolvers from './resolvers'
 import models from './models'
+import jwt from 'jsonwebtoken'
 
 const SECRET = 'thisisasecret';
-
 
 const schema = makeExecutableSchema({
     typeDefs,
@@ -17,22 +17,33 @@ const schema = makeExecutableSchema({
 
 
 
-
 const PORT = 3000;
 const app = express();
 
-const addUser = async(req, res) => {
-    const token = req.headers['authentication'];
+const addUser = async (req) => {
+    const token = req.headers.authorization
+    console.log('TOKENNNNN', token)
     try {
-        jwt.verify(token, SECRET)
-    }catch(error){
+        const { user } =  await jwt.verify(token, SECRET)
+        req.user = user;
+    }   catch(error)   {
         console.log(error)
     }
+    req.next()
 }
 
+// app.use(addUser)
 
 
-app.use('/graphql', bodyParser.json(), graphqlExpress({ schema, context: { models, SECRET }}),);
+app.use('/graphql', bodyParser.json(), graphqlExpress(req =>({ 
+    schema, 
+    context: { 
+        models, 
+        SECRET,
+        user: req.user, 
+    }
+    })),
+);
 
 
 app.use('/graphiql', graphiqlExpress({
