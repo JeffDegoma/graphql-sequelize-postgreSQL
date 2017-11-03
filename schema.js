@@ -1,5 +1,9 @@
 export default `
 
+    type Subscription {
+        userAdded: User!
+    }
+
     type Suggestion {
         id: Int!
         text: String!
@@ -39,6 +43,12 @@ export default `
         register(username: String!, email: String!, password: String!): User!
         login(email: String!, password: String!): String!
 
+    }
+
+    schema {
+        query: Query
+        mutation: Mutation
+        subscription: Subscription
     }
 
 `

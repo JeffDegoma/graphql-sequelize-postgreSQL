@@ -1,7 +1,12 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import { createServer } from 'http';
 import { graphiqlExpress, graphqlExpress } from 'graphql-server-express';
 import { makeExecutableSchema } from 'graphql-tools'
+import { execute, subscribe } from 'graphql';
+import { PubSub } from 'graphql-subscriptions';
+import { SubscriptionServer } from 'subscriptions-transport-ws';
+
 
 import typeDefs from './schema'
 import resolvers from './resolvers'
@@ -16,8 +21,6 @@ const schema = makeExecutableSchema({
 })
 
 
-
-const PORT = 3000;
 const app = express();
 
 const addUser = async (req ) => {
@@ -34,6 +37,9 @@ const addUser = async (req ) => {
 
 app.use(addUser)
 
+app.use('/graphiql', graphiqlExpress({
+  endpointURL: '/graphql',
+}));
 
 app.use('/graphql', bodyParser.json(), graphqlExpress(req =>({ 
     schema, 
@@ -45,11 +51,19 @@ app.use('/graphql', bodyParser.json(), graphqlExpress(req =>({
     })),
 );
 
-
-app.use('/graphiql', graphiqlExpress({
-  endpointURL: '/graphql',
-}));
-
+const server = createServer(app)
 
 console.log("WORKING!!!!!!")
-models.sequelize.sync().then(() => app.listen(PORT));
+models.sequelize.sync().then(() => server.listen(3000, () => {
+    new SubscriptionServer({
+        execute,
+        subscribe,
+        schema
+    },
+    {
+        server,
+        path:'/subscriptions'
+    }
+    )
+}));
+
