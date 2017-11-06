@@ -42,6 +42,7 @@ export default `
         createSuggestion(creatorId: Int!, text: String, boardId: Int!): Suggestion!
         register(username: String!, email: String!, password: String!): User!
         login(email: String!, password: String!): String!
+        createUser(user: String!): User!
 
     }
 
